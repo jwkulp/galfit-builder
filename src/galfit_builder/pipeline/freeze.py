@@ -144,12 +144,12 @@ def apply_polygon_freezing(
     components: list[dict],
     polygons: list[PolygonPixelRegion]
 ) -> list[str]:
-    """Freeze components outside polygons, free those inside."""
+    """Freeze components inside polygons, free those outside."""
     result = lines.copy()
 
     for comp in components:
         inside = point_in_polygons(comp["x"], comp["y"], polygons)
-        result = freeze_component(result, comp["start_index"], freeze=not inside)
+        result = freeze_component(result, comp["start_index"], freeze=inside)
 
     return result
 
@@ -262,12 +262,8 @@ def main():
     # Read regions
     all_regions = Regions.read(regions_path, format="ds9")
 
-    # Green polygons define freeze zones
-    polygons = [
-        r for r in all_regions
-        if isinstance(r, PolygonPixelRegion)
-        and (r.visual.get("edgecolor") or r.visual.get("facecolor") or "").lower() == "green"
-    ]
+    # All polygons define freeze zones
+    polygons = [r for r in all_regions if isinstance(r, PolygonPixelRegion)]
 
     # Non-polygon regions are components
     component_regions = [r for r in all_regions if not isinstance(r, PolygonPixelRegion)]
@@ -306,7 +302,8 @@ def main():
             # Get last component number
             last_num = max((c["component_number"] for c in feedme_comps), default=1)
 
-            # Build new components
+            # Build new components (disable sky - feedme already has one)
+            config.setdefault("defaults", {}).setdefault("sky", {})["include"] = False
             new_comps = build_components(new_regions, image_data, config)
 
             # Renumber and append
