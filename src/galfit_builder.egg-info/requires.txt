@@ -1,9 +1,0 @@
-numpy>=1.20
-astropy>=5.0
-regions>=0.7
-
-[dev]
-pytest>=7.0
-pytest-cov
-mypy
-ruff

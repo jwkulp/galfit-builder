@@ -98,7 +98,7 @@ white = "nuker"
 orange = "expdisk"
 pink = "edgedisk"
 # Point regions are always treated as PSF regardless of color
-# Sky is NOT mapped to regions - use add_sky=True in build_components() or config
+# Sky is configured in [defaults.sky], not mapped to regions
 
 
 ################################################################################
