@@ -262,7 +262,11 @@ def process_psf(
 def resolve_output_path(input_path: Path, prefix: str, force: bool) -> Path:
     """Generate output path with prefix, handling versioning."""
     directory = input_path.parent
-    output_name = f"{prefix}{input_path.name}"
+    # Avoid double-prefixing if input already has the prefix
+    if input_path.name.startswith(prefix):
+        output_name = input_path.name
+    else:
+        output_name = f"{prefix}{input_path.name}"
     output_path = directory / output_name
 
     if force or not output_path.exists():
