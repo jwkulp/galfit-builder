@@ -1,0 +1,4 @@
+[console_scripts]
+galfit-builder = galfit_builder.pipeline.run:main
+galfit-cutout = galfit_builder.pipeline.cutout:main
+galfit-freeze = galfit_builder.pipeline.freeze:main

@@ -1,0 +1,237 @@
+########################################
+# REGION FILE INPUT
+########################################
+[region_file]
+
+region_file = 
+
+
+########################################
+# GALFIT CONTROL PARAMETERS
+########################################
+[galfit_control_inputs]
+
+working_dir = "/home/jameskulp"
+
+input_data_image = "input.fits"
+output_data_image = "output.fits"
+
+zeropoint = 25.0
+
+plate_scale = [0.03, 0.03]
+
+sigma_image = "sigma.fits"
+psf_image   = "psf.fits"
+mask_image  = "mask.fits"
+
+psf_sampling = 1
+
+fit_region = [1, 1000, 1, 1000]
+conv_box   = [100, 100]
+display_type = "regular"
+mode = 0
+
+[galfit_control_outputs]
+version_outputs = true
+overwrite = true
+
+########################################
+# GLOBAL PHOTOMETRY SETTINGS
+########################################
+[photometry]
+fallback_mag = 30.0
+fallback_mu = 30.0
+
+########################################
+# DEFAULT COMPONENT SETTINGS
+########################################
+
+# ---- PSF ----
+[defaults.psf]
+mag = 27
+
+position_freeze = false
+mag_freeze = false
+
+include_in_output = true
+
+# ---- SERSIC ----
+[defaults.sersic]
+sersic_index = 2
+
+x_pos_freeze = false
+y_pos_freeze = false
+mag_freeze = false
+eff_rad_freeze = false
+sersic_index_freeze = false
+axis_ratio_freeze = false
+pos_angle_freeze = false
+
+include_in_output = true
+
+# ---- DEVAUC ----
+[defaults.devauc]
+x_pos_freeze = false
+y_pos_freeze = false
+mag_freeze = false
+eff_rad_freeze = false
+axis_ratio_freeze = false
+pos_angle_freeze = false
+
+include_in_output = true
+
+# ---- EXPDISK ----
+[defaults.expdisk]
+x_pos_freeze = false
+y_pos_freeze = false
+mag_freeze = false
+scale_radius_freeze = false
+axis_ratio_freeze = false
+pos_angle_freeze = false
+
+include_in_output = true
+
+# ---- KING ----
+[defaults.king]
+rc_ratio = 0.5
+min_rc = 1.0
+
+rt_ratio = 3.0
+min_rt = 2.0
+
+alpha = 2.0
+
+x_pos_freeze = false
+y_pos_freeze = false
+mu_freeze = false
+rc_freeze = false
+rt_freeze = false
+alpha_freeze = false
+axis_ratio_freeze = false
+pos_angle_freeze = false
+
+include_in_output = true
+
+# ---- NUKER ----
+[defaults.nuker]
+rb_ratio = 0.5
+min_rb = 1.0
+
+alpha = 2.0
+beta = 2.0
+gamma = 0.5
+
+x_pos_freeze = false
+y_pos_freeze = false
+mu_b_freeze = false
+rb_freeze = false
+alpha_freeze = false
+beta_freeze = false
+gamma_freeze = false
+axis_ratio_freeze = false
+
+include_in_output = true
+
+########################################
+# COMPONENT OVERRIDES
+########################################
+
+# ---- PSF ----
+[overrides.psf]
+mag = "auto"
+
+x_pos_freeze = "auto"
+y_pos_freeze = "auto"
+mag_freeze = "auto"
+
+include_in_output = "auto"
+
+# ---- SERSIC ----
+[overrides.sersic]
+sersic_index = "auto"
+
+x_pos_freeze = "auto"
+y_pos_freeze = "auto"
+mag_freeze = "auto"
+eff_rad_freeze = "auto"
+sersic_index_freeze = "auto"
+axis_ratio_freeze = "auto"
+pos_angle_freeze = "auto"
+
+include_in_output = "auto"
+
+# ---- DEVAUC ----
+[overrides.devauc]
+x_pos_freeze = "auto"
+y_pos_freeze = "auto"
+mag_freeze = "auto"
+eff_rad_freeze = "auto"
+axis_ratio_freeze = "auto"
+pos_angle_freeze = "auto"
+
+include_in_output = "auto"
+
+# ---- EXPDISK ----
+[defaults.expdisk]
+x_pos_freeze = "auto"
+y_pos_freeze = "auto"
+mag_freeze = "auto"
+scale_radius_freeze = "auto"
+axis_ratio_freeze = "auto"
+pos_angle_freeze = "auto"
+
+include_in_output = "auto"
+
+# ---- KING ----
+[defaults.king]
+rc_ratio = "auto"
+rt_ratio = "auto"
+alpha = "auto"
+
+x_pos_freeze = "auto"
+y_pos_freeze = "auto"
+mu_freeze = "auto"
+rc_freeze = "auto"
+rt_freeze = "auto"
+alpha_freeze = "auto"
+axis_ratio_freeze = "auto"
+pos_angle_freeze = "auto"
+
+include_in_output = "auto"
+
+# ---- NUKER ----
+[defaults.nuker]
+rb_ratio = "auto"
+min_rb = "auto"
+
+alpha = "auto"
+beta = "auto"
+gamma = "auto"
+
+x_pos_freeze = "auto"
+y_pos_freeze = "auto"
+mu_b_freeze = "auto"
+rb_freeze = "auto"
+alpha_freeze = "auto"
+beta_freeze = "auto"
+gamma_freeze = "auto"
+axis_ratio_freeze = "auto"
+
+include_in_output = "auto"
+
+########################################
+# REGION → COMPONENT MAPPING
+########################################
+[region_colors]
+green = "sersic"
+blue = "ferrer"
+cyan = "gaussian"
+yellow = "moffat"
+magenta = "king"
+white = "nuker"
+orange = "expdisk"
+pink = "edgedisk"
+tan = "devauc"
+
+green = "constraint"
+cyan = "freezer"

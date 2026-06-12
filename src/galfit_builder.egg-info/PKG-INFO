@@ -1,0 +1,143 @@
+Metadata-Version: 2.4
+Name: galfit-builder
+Version: 0.1.0
+Summary: Convert DS9 region files to GALFIT feedme input files
+Author: James Kulp
+License: MIT
+Project-URL: Homepage, https://github.com/jameskulp/galfit-builder
+Project-URL: Issues, https://github.com/jameskulp/galfit-builder/issues
+Keywords: astronomy,galfit,ds9,regions,galaxy fitting
+Classifier: Development Status :: 3 - Alpha
+Classifier: Intended Audience :: Science/Research
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: 3.11
+Classifier: Programming Language :: Python :: 3.12
+Classifier: Topic :: Scientific/Engineering :: Astronomy
+Requires-Python: >=3.10
+Description-Content-Type: text/markdown
+Requires-Dist: numpy>=1.20
+Requires-Dist: astropy>=5.0
+Requires-Dist: regions>=0.7
+Provides-Extra: dev
+Requires-Dist: pytest>=7.0; extra == "dev"
+Requires-Dist: pytest-cov; extra == "dev"
+Requires-Dist: mypy; extra == "dev"
+Requires-Dist: ruff; extra == "dev"
+
+# galfit-builder
+
+Convert DS9 region files to GALFIT feedme input files.
+
+## Installation
+
+```bash
+pip install -e .
+```
+
+Or with development dependencies:
+```bash
+pip install -e ".[dev]"
+```
+
+## Usage
+
+### Command Line
+
+```bash
+galfit-builder --config config.toml
+```
+
+### Python API
+
+```python
+from galfit_builder import load_config, build_components, read_regions, GalfitControls
+from astropy.io import fits
+
+# Load configuration
+config = load_config("config.toml")
+
+# Read regions and image data
+regions = read_regions("sources.reg")
+image_data = fits.getdata("input.fits")
+
+# Build components from regions
+components = build_components(regions, image_data, config)
+
+# Generate feedme output
+for comp in components:
+    print(comp.to_galfit())
+```
+
+## Configuration
+
+See `src/galfit_builder/config/example_config.toml` for a fully documented configuration file.
+
+### Region Color Mapping
+
+DS9 region colors map to GALFIT component types:
+
+| Color   | Component |
+|---------|-----------|
+| green   | sersic    |
+| red     | devauc    |
+| blue    | ferrer    |
+| cyan    | gaussian  |
+| yellow  | moffat    |
+| magenta | king      |
+| white   | nuker     |
+| orange  | expdisk   |
+| pink    | edgedisk  |
+
+Point regions are always treated as PSF components regardless of color.
+
+Sky components are not region-based - use `add_sky=True` in `build_components()`.
+
+## Supported Components
+
+All 11 GALFIT component types are supported:
+
+| Component | Description | Region Shape |
+|-----------|-------------|--------------|
+| sersic | Sersic profile | Ellipse |
+| psf | Point spread function | Point |
+| devauc | de Vaucouleurs (n=4) | Ellipse |
+| expdisk | Exponential disk (n=1) | Ellipse |
+| ferrer | Ferrer profile | Ellipse |
+| gaussian | 2D Gaussian | Ellipse |
+| moffat | Moffat profile | Ellipse |
+| king | King profile (globular clusters) | Ellipse |
+| nuker | Nuker profile (galaxy nuclei) | Ellipse |
+| edgedisk | Edge-on disk | Ellipse |
+| sky | Sky background | N/A (auto or config) |
+
+### Adding Sky Components
+
+Sky is estimated from image edges or set via config:
+
+```python
+# Auto-add sky after all region components
+components = build_components(regions, image_data, config, add_sky=True)
+
+# Or build sky separately
+from galfit_builder import build_sky
+sky = build_sky(component_number=10, region=None, config=config, image_data=image_data)
+```
+
+## Development
+
+Run tests:
+```bash
+pytest
+```
+
+Type checking:
+```bash
+mypy src/galfit_builder
+```
+
+Linting:
+```bash
+ruff check src/galfit_builder
+```

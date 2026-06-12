@@ -1,0 +1,360 @@
+################################################################################
+# GALFIT Builder Configuration
+#
+# This file configures how DS9 regions are converted to GALFIT feedme files.
+################################################################################
+
+################################################################################
+# SPECIAL VALUE: "auto"
+#
+# Use "auto" to let galfit-builder handle it for you:
+#   - For optional files (sigma, mask, constraint): writes "none" to GALFIT
+#   - For numeric values (sky background, magnitudes): computes from the data
+#
+# You can always override with an explicit value (filename or number).
+################################################################################
+
+################################################################################
+# INPUT FILES
+# Files read by galfit-builder
+################################################################################
+[input]
+# DS9 region file defining components
+region_file = "regions.reg"
+
+
+################################################################################
+# GALFIT INPUT CONTROLS
+# These map directly to the GALFIT feedme header (A-P parameters)
+################################################################################
+[galfit_input_controls]
+working_dir = "."
+
+# A) Input FITS image
+input_data_image = "input.fits"
+
+# J) Photometric zeropoint
+zeropoint = 25.0
+
+# K) Plate scale [arcsec/pixel]
+plate_scale = [0.03, 0.03]
+
+# C) Sigma image ("auto" = let GALFIT estimate, or provide a filename)
+sigma_image = "auto"
+
+# D) PSF image (required for proper fitting — provide a filename)
+psf_image = "psf.fits"
+
+# F) Bad pixel mask (optional)
+#    - Omit or "auto": auto-generate from excluded regions, or "none" if no exclusions
+#    - Provide a filename to use your own mask (e.g., for cosmic rays, bad pixels)
+# mask_image = "my_mask.fits"
+
+# G) Constraint file (optional)
+#    - Omit or "auto": no constraints
+#    - Provide a filename to use parameter constraints
+# constraint_file = "constraints.txt"
+
+# E) PSF fine sampling factor
+psf_sampling = 1
+
+# H) Fit region [xmin, xmax, ymin, ymax]
+fit_region = [1, 1000, 1, 1000]
+
+# I) Convolution box size [x, y]
+conv_box = [100, 100]
+
+# O) Display type: "regular", "curses", or "both"
+display_type = "regular"
+
+# P) Mode: 0=optimize, 1=model, 2=imgblock, 3=subcomps
+mode = 0
+
+
+################################################################################
+# GALFIT OUTPUT CONTROLS
+# Control output file naming and versioning
+################################################################################
+[galfit_output_controls]
+# Append version numbers to output files (output_v0.fits, output_v1.fits, ...)
+version_outputs = true
+
+# Overwrite existing files (ignored if version_outputs = true)
+overwrite = false
+
+
+################################################################################
+# REGION COLOR MAPPING
+# Maps DS9 region colors to GALFIT component types
+################################################################################
+[region_colors]
+green = "sersic"
+red = "devauc"
+blue = "ferrer"
+cyan = "gaussian"
+yellow = "moffat"
+magenta = "king"
+white = "nuker"
+orange = "expdisk"
+pink = "edgedisk"
+# Point regions are always treated as PSF regardless of color
+# Sky is NOT mapped to regions - use add_sky=True in build_components() or config
+
+
+################################################################################
+# PHOTOMETRY SETTINGS
+# Global settings for flux/magnitude estimation
+################################################################################
+[photometry]
+# Multiplier for mask-based flux estimation
+flux_scale = 2.0
+
+# Fallback magnitude when flux estimation fails (flux <= 0)
+fallback_mag = 30.0
+
+# Fallback surface brightness when estimation fails [mag/arcsec^2]
+fallback_mu = 25.0
+
+
+################################################################################
+# COMPONENT DEFAULTS
+# Default parameter values for each component type.
+# Parameters ending in _freeze control whether the parameter is held fixed.
+################################################################################
+
+[defaults.sersic]
+sersic_index = 2.5
+x_pos_freeze = false
+y_pos_freeze = false
+mag_freeze = false
+eff_rad_freeze = false
+sersic_index_freeze = false
+axis_ratio_freeze = false
+pos_angle_freeze = false
+include_in_output = true
+
+[defaults.psf]
+mag = 25.0
+x_pos_freeze = false
+y_pos_freeze = false
+mag_freeze = false
+include_in_output = true
+
+[defaults.devauc]
+x_pos_freeze = false
+y_pos_freeze = false
+mag_freeze = false
+eff_rad_freeze = false
+axis_ratio_freeze = false
+pos_angle_freeze = false
+include_in_output = true
+
+[defaults.expdisk]
+x_pos_freeze = false
+y_pos_freeze = false
+mag_freeze = false
+scale_radius_freeze = false
+axis_ratio_freeze = false
+pos_angle_freeze = false
+include_in_output = true
+
+[defaults.ferrer]
+alpha = 2.0
+beta = 2.0
+x_pos_freeze = false
+y_pos_freeze = false
+cen_surf_bright_freeze = false
+outer_trunc_rad_freeze = false
+alpha_freeze = false
+beta_freeze = false
+axis_ratio_freeze = false
+pos_angle_freeze = false
+include_in_output = true
+
+[defaults.gaussian]
+x_pos_freeze = false
+y_pos_freeze = false
+mag_freeze = false
+fwhm_freeze = false
+axis_ratio_freeze = false
+pos_angle_freeze = false
+include_in_output = true
+
+[defaults.moffat]
+powerlaw = 2.5
+x_pos_freeze = false
+y_pos_freeze = false
+mag_freeze = false
+fwhm_freeze = false
+powerlaw_freeze = false
+axis_ratio_freeze = false
+pos_angle_freeze = false
+include_in_output = true
+
+[defaults.king]
+alpha = 2.0
+rc_ratio = 0.1      # core radius as fraction of semi-major axis
+rt_ratio = 1.0      # tidal radius as fraction of semi-major axis
+min_rc = 1.0        # minimum core radius [pixels]
+min_rt = 5.0        # minimum tidal radius [pixels]
+x_pos_freeze = false
+y_pos_freeze = false
+mu_freeze = false
+rc_freeze = false
+rt_freeze = false
+alpha_freeze = false
+axis_ratio_freeze = false
+pos_angle_freeze = false
+include_in_output = true
+
+[defaults.nuker]
+alpha = 2.0
+beta = 1.5
+gamma = 0.5
+rb_ratio = 0.5      # break radius as fraction of semi-major axis
+min_rb = 2.0        # minimum break radius [pixels]
+x_pos_freeze = false
+y_pos_freeze = false
+mu_freeze = false
+rb_freeze = false
+alpha_freeze = false
+beta_freeze = false
+gamma_freeze = false
+axis_ratio_freeze = false
+pos_angle_freeze = false
+include_in_output = true
+
+[defaults.edgedisk]
+scale_length_ratio = 1.0    # disk scale length = semi-major axis * ratio
+scale_height_ratio = 1.0    # disk scale height = semi-minor axis * ratio
+x_pos_freeze = false
+y_pos_freeze = false
+cen_surf_bright_freeze = false
+disk_scale_height_freeze = false
+disk_scale_length_freeze = false
+pos_angle_freeze = false
+include_in_output = true
+
+[defaults.sky]
+# Set to false to exclude sky component from feedme
+include = true
+
+# "auto" = estimate sky background from image edges (computed by galfit-builder)
+# Or set a numeric value like 100.5 to use a fixed background
+background = "auto"
+edge_fraction = 0.1         # fraction of image edge used for sky estimation (only used when background = "auto")
+dsky_dx = 0.0               # sky gradient in x [ADU/pixel]
+dsky_dy = 0.0               # sky gradient in y [ADU/pixel]
+background_freeze = false
+dsky_dx_freeze = true       # gradients typically frozen
+dsky_dy_freeze = true
+include_in_output = true
+
+
+################################################################################
+# COMPONENT OVERRIDES (optional)
+# Override specific defaults for this run. Same keys as defaults.
+################################################################################
+
+[overrides.sersic]
+# sersic_index = 4.0  # uncomment to force de Vaucouleurs profile
+
+
+################################################################################
+# CONSTRAINT DEFAULTS (optional)
+# Default parameter constraints for each component type.
+#
+# Constraint formats:
+#   "min to max"  - Hard limits (e.g., "0.5 to 8")
+#   "-delta +delta" - Offset from initial value (e.g., "-5 5" means +/- 5)
+#   re_scale = 0.1  - Special: re constrained to [re*scale, re/scale] of initial
+#
+# Comment out or remove any constraint you don't want applied.
+################################################################################
+
+[constraints.sersic]
+n = "0.5 to 8"
+q = "0.1 to 1"
+re_scale = 0.1
+mag = "10 to 35"
+x = "-5 5"
+y = "-5 5"
+pa = "-180 180"
+
+[constraints.psf]
+mag = "-5 5"
+x = "-3 3"
+y = "-3 3"
+
+[constraints.devauc]
+q = "0.1 to 1"
+re_scale = 0.1
+mag = "10 to 35"
+x = "-5 5"
+y = "-5 5"
+pa = "-180 180"
+
+[constraints.expdisk]
+q = "0.1 to 1"
+rs_scale = 0.1
+mag = "10 to 35"
+x = "-5 5"
+y = "-5 5"
+pa = "-180 180"
+
+[constraints.gaussian]
+q = "0.1 to 1"
+fwhm = "0.5 to 50"
+mag = "10 to 35"
+x = "-5 5"
+y = "-5 5"
+pa = "-180 180"
+
+[constraints.moffat]
+q = "0.1 to 1"
+fwhm = "0.5 to 50"
+n = "0.5 to 10"
+mag = "10 to 35"
+x = "-5 5"
+y = "-5 5"
+pa = "-180 180"
+
+[constraints.king]
+q = "0.1 to 1"
+rc_scale = 0.1
+rt_scale = 0.1
+alpha = "0.5 to 10"
+x = "-5 5"
+y = "-5 5"
+pa = "-180 180"
+
+[constraints.nuker]
+q = "0.1 to 1"
+rb_scale = 0.1
+alpha = "0.5 to 10"
+beta = "0.5 to 10"
+gamma = "0 to 2"
+x = "-5 5"
+y = "-5 5"
+pa = "-180 180"
+
+[constraints.ferrer]
+q = "0.1 to 1"
+rout_scale = 0.1
+alpha = "0.1 to 10"
+beta = "0 to 5"
+x = "-5 5"
+y = "-5 5"
+pa = "-180 180"
+
+[constraints.edgedisk]
+hs_scale = 0.1
+rs_scale = 0.1
+x = "-5 5"
+y = "-5 5"
+pa = "-180 180"
+
+[constraints.sky]
+# sky = "-100 100"  # offset from initial sky value
+# dsky_dx = "-0.01 0.01"
+# dsky_dy = "-0.01 0.01"

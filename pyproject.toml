@@ -1,0 +1,70 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "galfit-builder"
+version = "0.1.0"
+description = "Convert DS9 region files to GALFIT feedme input files"
+readme = "README.md"
+license = {text = "MIT"}
+requires-python = ">=3.10"
+authors = [
+    {name = "James Kulp"}
+]
+keywords = ["astronomy", "galfit", "ds9", "regions", "galaxy fitting"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering :: Astronomy",
+]
+
+dependencies = [
+    "numpy>=1.20",
+    "astropy>=5.0",
+    "regions>=0.7",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0",
+    "pytest-cov",
+    "mypy",
+    "ruff",
+]
+
+[project.scripts]
+galfit-builder = "galfit_builder.pipeline.run:main"
+galfit-freeze = "galfit_builder.pipeline.freeze:main"
+galfit-cutout = "galfit_builder.pipeline.cutout:main"
+galfit-to-regions = "galfit_builder.pipeline.to_regions:main"
+
+[project.urls]
+Homepage = "https://github.com/jameskulp/galfit-builder"
+Issues = "https://github.com/jameskulp/galfit-builder/issues"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
+
+[tool.mypy]
+python_version = "3.10"
+warn_return_any = true
+warn_unused_ignores = true
+strict = false
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "UP"]
+ignore = ["E501"]

@@ -1,0 +1,120 @@
+########################################
+# REGION → COMPONENT MAPPING
+########################################
+[region_colors]
+green = "sersic"
+blue = "ferrer"
+cyan = "gaussian"
+yellow = "moffat"
+magenta = "king"
+white = "nuker"
+orange = "expdisk"
+purple = "blue"
+
+########################################
+# GLOBAL PHOTOMETRY SETTINGS
+########################################
+[photometry]
+flux_scale = 2.0        # multiplier for mask-based flux
+fallback_mag = 30.0       # used if flux <= 0
+
+########################################
+# DEFAULT COMPONENT SETTINGS
+########################################
+
+# ---- SERSIC ----
+[defaults.sersic]
+sersic_index = 2
+include_in_output = true
+
+# ---- PSF ----
+[defaults.psf]
+mag = 27
+include_in_output = true
+
+
+########################################
+# COMPONENT OVERRIDES
+########################################
+
+# ---- SERSIC ----
+[overrides.sersic]
+sersic_index = 8
+include_in_output = true
+
+# ---- PSF ----
+[overrides.psf]
+mag = 27
+include_in_output = true
+
+# ---- FERRER ----
+[overrides.ferrer]
+alpha = 2.0
+beta = 2.0
+include_in_output = true
+
+# ---- GAUSSIAN ----
+[overrides.gaussian]
+include_in_output = true
+
+# ---- MOFFAT ----
+[overrides.moffat]
+include_in_output = true
+
+# ---- KING ----
+[overrides.king]
+alpha = 2.0
+core_radius = 5        # optional override
+tidal_radius = 20      # optional override
+include_in_output = true
+
+# ---- NUKER ----
+[overrides.nuker]
+alpha = 2.0
+beta = 2.0
+gamma = 0.5
+include_in_output = true
+
+# ---- EXPDISK ----
+[overrides.expdisk]
+include_in_output = true
+
+# ---- DEVAUC ----
+[overrides.devauc]
+include_in_output = true
+
+
+########################################
+# GALFIT CONTROL PARAMETERS
+########################################
+[galfit]
+
+input_image  = "input.fits"
+output_image = "output.fits"
+
+zeropoint = 25.0
+
+plate_scale = [0.03, 0.03]
+
+sigma_image = "none"
+psf_image   = "psf.fits"
+mask_image  = "none"
+
+psf_sampling = 1
+
+fit_region = [1, 1000, 1, 1000]
+conv_box   = [100, 100]
+
+display_type = "regular"
+mode = 0
+
+
+########################################
+# CONSTRAINT DEFAULTS (optional, future)
+########################################
+[constraint_defaults.sersic]
+n = "0.5 to 6"
+q = "0.05 to 1"
+
+[constraint_defaults.psf]
+mag = "-5 5"
